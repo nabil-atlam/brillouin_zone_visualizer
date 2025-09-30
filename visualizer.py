@@ -19,6 +19,7 @@ from scipy.spatial import Voronoi, ConvexHull
 # in the momentum space and writes a bunch of wannier tools input files to compute the iso-energy surfaces on each k-plane. 
 # ========================================================================================================================
 
+# Author: Nabil 
 
 # Input parameters 
 # ======================================================================================================================== 
@@ -79,15 +80,16 @@ def compute_normal_simplex(simplex3_cartesian):
 
 
 class kplane_plotter:
-    def __init__(self, real_basis, miller_indices, tol_fbz_plot = 0.01):
+    def __init__(self, real_basis, miller_indices = None, tol_fbz_plot = 0.01):
         '''
         real_basis: 3x3 matrix, each row is a lattice vector in real space 
-        miller_indices: Array  of 3 integers, the Miller indices of the planes  
+        miller_indices: Array  of shape N x 3 integers, the Miller indices of the planes, N = # of planes   
         '''
         if real_basis.shape != (3,3):
             raise ValueError("real_basis must be a 3x3 matrix")
-        if len(miller_indices) != 3:
-            raise ValueError("miller_indices must be an array of 3 numbers")
+        if miller_indices is not None:
+            if len(miller_indices) != 3:
+                raise ValueError("miller_indices must be an array of 3 numbers")
         
         self.real_basis     = real_basis 
         self.miller_indices = miller_indices 
@@ -218,7 +220,7 @@ class kplane_plotter:
     # 2. Plots the FBZ as well 
     # 3. The plot should be clear and easily understandable 
     # -======================================================================================================= 
-    def plot(self):
+    def plot(self, show_basis_vectors = True):
 
         # basic things about the figure dimensions 
         f_width = 1200 
@@ -245,26 +247,29 @@ class kplane_plotter:
              
         rgb_bzshafts = hex_to_rgba('#192a56', 0.8)
 
-        # Plotting code 
-        for i in range(3):
-            f.add_trace(go.Scatter3d(
-                x = xs[i], y = ys[i], z = zs[i],
-                mode = 'lines',
-                line = dict(color = rgb_bzshafts, width = 30),
-                name = 'BZBasis_Shaft')
-                )
+        if show_basis_vectors:
+            # Plotting code 
+            for i in range(3):
+                f.add_trace(go.Scatter3d(
+                    x = xs[i], y = ys[i], z = zs[i],
+                    mode = 'lines',
+                    line = dict(color = rgb_bzshafts, width = 30),
+                    name = 'BZBasis_Shaft')
+                    )
             
-        # Plot the cones at the tips of the arrows 
-        f.add_trace(
-                go.Cone(
-                x = Gs_x, y = Gs_y, z = Gs_z,
-                u = Gs_x, v = Gs_y, w = Gs_z,
-                colorscale = [[0, rgb_bzshafts], [1, rgb_bzshafts]],
-                showscale  = False,
-                sizemode   = "scaled",
-                sizeref    = 0.1,  
-                anchor     = "tail")
-                )
+            # Plot the cones at the tips of the arrows 
+            f.add_trace(
+                    go.Cone(
+                    x = Gs_x, y = Gs_y, z = Gs_z,
+                    u = Gs_x, v = Gs_y, w = Gs_z,
+                    colorscale = [[0, rgb_bzshafts], [1, rgb_bzshafts]],
+                    showscale  = False,
+                    sizemode   = "scaled",
+                    sizeref    = 0.1,  
+                    anchor     = "tail")
+                    )
+
+        
         
         edges = self.calc_fbz_vertices(cutoffs = [1,1,1])
         for p in edges:
@@ -309,7 +314,7 @@ class kplane_plotter:
 
 def main():
     plotter = kplane_plotter(real_basis, [1,1,-1]) 
-    plotter.plot()
+    plotter.plot(show_basis_vectors = True)
 
 if __name__ == "__main__":
     main()
