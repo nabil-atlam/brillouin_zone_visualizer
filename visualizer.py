@@ -1,9 +1,6 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[112]:
-
-
 import numpy as np 
 from   numpy import pi, array
 
@@ -14,9 +11,6 @@ import plotly.io as pio
 from scipy.spatial import Voronoi, ConvexHull 
 
 
-
-
-# In[113]:
 
 
 # Usage 
@@ -33,9 +27,6 @@ from scipy.spatial import Voronoi, ConvexHull
 real_basis = array([[-1.9287500381500000,    1.9287500381499998,    4.7979998588499999],
             [1.9287500381500000,   -1.9287500381500005,    4.7979998588499999],
             [1.9287500381500000,    1.9287500381500005,   -4.7979998588499999]])
-
-
-# In[125]:
 
 
 def hex_to_rgb(hex_color):
@@ -85,9 +76,6 @@ def compute_normal_simplex(simplex3_cartesian):
     normal = np.cross(v1, v2)
     normal = normal / np.linalg.norm(normal)
     return normal
-
-
-# In[184]:
 
 
 class kplane_plotter:
@@ -319,9 +307,6 @@ class kplane_plotter:
     
 
 
-# In[ ]:
-
-
 def main():
     plotter = kplane_plotter(real_basis, [1,1,-1]) 
     plotter.plot()
@@ -330,13 +315,7 @@ if __name__ == "__main__":
     main()
 
 
-# In[ ]:
 
-
-
-
-
-# In[ ]:
 
 
 
